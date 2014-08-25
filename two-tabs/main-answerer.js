@@ -9,7 +9,7 @@
 	trace('Peer connection: Created');
 
 	peerConnection.ondatachannel = function (event) {
-		trace('ChannelXXX: created');
+		trace('Channel: created');
 		channel = event.channel;
 		handleChannel(channel);
 	};
@@ -20,6 +20,8 @@
 			trace('Session (answer): Created');
 			peerConnection.setLocalDescription(answer);
 			data.session = answer;
-		});
+		}, function (code) {
+    		console.error("Error: " + code);
+  		});
 	});
 

@@ -1,4 +1,5 @@
-var servers;
+var	servers = { "iceServers": [{ "url": "stun:stun.l.google.com:19302" }] };
+
 var channel;
 var data = {};
 
@@ -34,7 +35,9 @@ function handleChannel(channel) {
  */
 function handleConnection(peerConnection, data) {
 	peerConnection.setRemoteDescription(new SessionDescription(data.session));
-	peerConnection.addIceCandidate(new IceCandidate(data.ice));
+	if(data.ice) {
+		peerConnection.addIceCandidate(new IceCandidate(data.ice));
+	}
 };
 
 $('#close').click(function () {
