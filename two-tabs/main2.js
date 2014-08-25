@@ -1,40 +1,23 @@
 
-	var channel;
-
 	var peerConnection = new RTCPeerConnection(servers, {optional: [{RtpDataChannels: true}]});
 	peerConnection.onicecandidate = function (event) {
-		trace('Created ICE');
-		localStorage.setItem("ice-local", JSON.stringify(event.candidate));
+		data.ice = event.candidate;
+		trace('ICE: Created');
+		localStorage.setItem("data-local", JSON.stringify(data));
 		peerConnection.onicecandidate = null;
 	};
-	trace('Created peer connection');
-
-	//##########################################################################
+	trace('Peer connection: Created');
 
 	channel = peerConnection.createDataChannel("sendDataChannel", {reliable: true});
+	trace('Channel: created');
 	handleChannel(channel);
 
 	peerConnection.createOffer(function (offer) {
+		trace('Session (offer): Created');
 		peerConnection.setLocalDescription(offer);
-		trace('Created offer');
-		localStorage.setItem("offer-local", JSON.stringify(offer));
+		data.session = offer;
 	});
 
-	$('#offer-remote').click(function () {
-		var offer = new SessionDescription(JSON.parse(localStorage.getItem("offer-remote")));
-		peerConnection.setRemoteDescription(offer);
-
-		trace("Add ICE candidate")
-		var candidate = new IceCandidate(JSON.parse(localStorage.getItem("ice-remote")));
-		peerConnection.addIceCandidate(candidate);
+	$('#get').click(function () {
+		handleConnection(peerConnection, JSON.parse(localStorage.getItem("data-remote")));
 	});
-
-	//##########################################################################
-
-	$('#close').click(function () {
-		channel.close();
-		trace('(17) Closed data channel');
-		peerConnection.close();
-		trace('(19) Closed peer connections');
-	});
-
