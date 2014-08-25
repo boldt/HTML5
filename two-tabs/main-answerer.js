@@ -9,7 +9,7 @@
 	trace('Peer connection: Created');
 
 	peerConnection.ondatachannel = function (event) {
-		trace('Channel: created');
+		trace('ChannelXXX: created');
 		channel = event.channel;
 		handleChannel(channel);
 	};
