@@ -2,7 +2,7 @@ var servers = null;
 
 window.RTCPeerConnection = window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
 
-var sendChannel, receiveChannel;
+var localChannel, receiveChannel;
 
 function trace(text) {
   console.log((performance.now() / 1000).toFixed(3) + ": " + text);
@@ -44,9 +44,9 @@ function createConnection() {
 	};
 	trace('(02) Created local peer connection object localPeerConnection');
 
-	sendChannel = localPeerConnection.createDataChannel("sendDataChannel", {reliable: false});
-	sendChannel.onopen = handleSendChannelStateOnOpen;
-	sendChannel.onclose = handleSendChannelStateOnClose;
+	localChannel = localPeerConnection.createDataChannel("sendDataChannel", {reliable: false});
+	localChannel.onopen = handlelocalChannelStateOnOpen;
+	localChannel.onclose = handlelocalChannelStateOnClose;
 	trace('(03) Created send data channel');
 
 	localPeerConnection.createOffer(function (desc) {
@@ -65,8 +65,8 @@ function createConnection() {
 
 function closeDataChannels() {
 	trace('(16) Closing data channels');
-	sendChannel.close();
-	trace('(17) Closed data channel sendChannel');
+	localChannel.close();
+	trace('(17) Closed data channel localChannel');
 	receiveChannel.close();
 	trace('(18) Closed data channel receiveChannel');
 	localPeerConnection.close();
@@ -76,13 +76,13 @@ function closeDataChannels() {
 	trace('(19) Closed peer connections');
 }
 
-function handleSendChannelStateOnOpen() {
-	var readyState = sendChannel.readyState;
+function handlelocalChannelStateOnOpen() {
+	var readyState = localChannel.readyState;
 	trace('(12) Send channel state is: ' + readyState);
 }
 
-function handleSendChannelStateOnClose() {
-	var readyState = sendChannel.readyState;
+function handlelocalChannelStateOnClose() {
+	var readyState = localChannel.readyState;
 	trace('(20) Send channel state is: ' + readyState);
 }
 
@@ -92,7 +92,7 @@ function handleReceiveChannelStateOnOpen() {
 	trace('(13) Receive channel state is: ' + readyState);
 
 	var data = "Hallo!"
-	sendChannel.send(data);
+	localChannel.send(data);
 	trace('(14) Sent data: ' + data);
 }
 
