@@ -4,7 +4,7 @@ var RTCPeerConnection = window.mozRTCPeerConnection || window.webkitRTCPeerConne
 var SessionDescription = window.mozRTCSessionDescription || window.RTCSessionDescription;
 var IceCandidate = window.mozRTCIceCandidate || window.RTCIceCandidate;
 
-var remoteChannel;
+var channel;
 
 function trace(text) {
 	console.log((performance.now() / 1000).toFixed(3) + ": " + text);
@@ -12,60 +12,60 @@ function trace(text) {
 
 function createConnection() {
 
-	remotePeerConnection = new RTCPeerConnection(servers, {optional: [{RtpDataChannels: true}]});
-	remotePeerConnection.onicecandidate = function (event) {
-		if (event.candidate && !remotePeerConnection.candidate) {
+	peerConnection = new RTCPeerConnection(servers, {optional: [{RtpDataChannels: true}]});
+	peerConnection.onicecandidate = function (event) {
+		if (event.candidate && !peerConnection.candidate) {
 			trace('(10) Remote ICE callback');
-			remotePeerConnection.candidate = event.candidate;
+			peerConnection.candidate = event.candidate;
 			localStorage.setItem("ice-remote", JSON.stringify(event.candidate));
 			trace('(11) Remote ICE candidate');
 		}
 	};
-	trace('(01) Created remote peer connection object remotePeerConnection');
+	trace('(01) Created remote peer connection object peerConnection');
 
-	remotePeerConnection.ondatachannel = function (event) {
+	peerConnection.ondatachannel = function (event) {
 		trace('(05) Receive Channel Callback');
-		remoteChannel = event.channel;
-		remoteChannel.onmessage = function (event) {
+		channel = event.channel;
+		channel.onmessage = function (event) {
 			trace('(15) Received message: ' + event.data);
 		};
-		remoteChannel.onopen = handleremoteChannelStateOnOpen;
-		remoteChannel.onclose = handleremoteChannelStateOnClose;
+		channel.onopen = handlechannelStateOnOpen;
+		channel.onclose = handlechannelStateOnClose;
 	}
 
 	$('#offer-local').click(function () {
 		var desc = new SessionDescription(JSON.parse(localStorage.getItem("offer-local")));
-		remotePeerConnection.setRemoteDescription(desc);
+		peerConnection.setRemoteDescription(desc);
 
 		var candidate = new IceCandidate(JSON.parse(localStorage.getItem("ice-local")));
-		remotePeerConnection.addIceCandidate(candidate);
+		peerConnection.addIceCandidate(candidate);
 
-		remotePeerConnection.createAnswer(function (desc) {
-			remotePeerConnection.setLocalDescription(desc);
-			trace('(07) Answer from remotePeerConnection');
+		peerConnection.createAnswer(function (desc) {
+			peerConnection.setLocalDescription(desc);
+			trace('(07) Answer from peerConnection');
 			localStorage.setItem("offer-remote", JSON.stringify(desc));
 		});
 	});
 
 	$('#close').click(function () {
-		remoteChannel.close();
-		trace('(18) Closed data channel remoteChannel');
-		remotePeerConnection.close();
+		channel.close();
+		trace('(18) Closed data channel channel');
+		peerConnection.close();
 		trace('(19) Closed peer connections');
 	});
 }
 
-function handleremoteChannelStateOnOpen() {
-	var readyState = remoteChannel.readyState;
+function handlechannelStateOnOpen() {
+	var readyState = channel.readyState;
 	trace('(13) Receive channel state is: ' + readyState);
 
 	var data = "Hallo from remote!"
-	remoteChannel.send(data);
+	channel.send(data);
 	trace('(14) Sent data: ' + data);
 }
 
-function handleremoteChannelStateOnClose() {
-	var readyState = remoteChannel.readyState;
+function handlechannelStateOnClose() {
+	var readyState = channel.readyState;
 	trace('(21) Receive channel state is: ' + readyState);
 }
 
