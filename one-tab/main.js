@@ -12,6 +12,7 @@ function createConnection() {
 
 	remotePeerConnection = new RTCPeerConnection(servers, {optional: [{RtpDataChannels: true}]});
 	remotePeerConnection.onicecandidate = function (event) {
+		console.log(event.candidate);
 		if (event.candidate && !remotePeerConnection.candidate) {
 			trace('(10) Remote ICE callback');
 			remotePeerConnection.candidate = event.candidate;
@@ -59,8 +60,8 @@ function createConnection() {
 			trace('(07) Answer from remotePeerConnection');
 			//  trace('Answer from remotePeerConnection \n' + desc.sdp);
 			localPeerConnection.setRemoteDescription(desc);
-		});
-	});
+		}, function (e) { });
+	}, function (e) { });
 }
 
 function closeDataChannels() {

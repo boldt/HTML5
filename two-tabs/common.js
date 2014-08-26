@@ -35,9 +35,7 @@ function handleChannel(channel) {
  */
 function handleConnection(peerConnection, data) {
 	peerConnection.setRemoteDescription(new SessionDescription(data.session));
-	if(data.ice) {
-		peerConnection.addIceCandidate(new IceCandidate(data.ice));
-	}
+	peerConnection.addIceCandidate(new IceCandidate(data.ice));
 };
 
 $('#close').click(function () {
