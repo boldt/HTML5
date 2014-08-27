@@ -6,7 +6,7 @@
 	var peerConnection = new RTCPeerConnection(null, undefined);
 	var channel = peerConnection.createDataChannel("sendDataChannel", {reliable: true});
 
-	var constraints = { 'mandatory': { 'OfferToReceiveAudio': false } };
+	var constraints = { 'mandatory': { 'OfferToReceiveAudio': false, 'OfferToReceiveVideo': false } };
 
 	peerConnection.createOffer(
 		function (offer) {

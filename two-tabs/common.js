@@ -1,5 +1,5 @@
 var	servers = { "iceServers": [{ "url": "stun:stun.l.google.com:19302" }] };
-var constraints = { 'mandatory': { 'OfferToReceiveAudio': false } };
+var constraints = { 'mandatory': { 'OfferToReceiveAudio': false, 'OfferToReceiveVideo': false } };
 
 var channel;
 var RTCPeerConnection = window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
