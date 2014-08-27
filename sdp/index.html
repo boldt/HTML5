@@ -1,0 +1,16 @@
+<script>
+	var RTCPeerConnection = window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+	var SessionDescription = window.mozRTCSessionDescription || window.RTCSessionDescription;
+	var IceCandidate = window.mozRTCIceCandidate || window.RTCIceCandidate;
+
+	var peerConnection = new RTCPeerConnection(null, undefined);
+	var channel = peerConnection.createDataChannel("sendDataChannel", {reliable: true});
+
+	peerConnection.createOffer(
+		function (offer) {
+			console.log(offer.sdp);
+		}, function (e) {
+			console.error(e);
+		}
+	);
+</script>
