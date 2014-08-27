@@ -5,8 +5,9 @@
 	// @see: http://stackoverflow.com/a/25489506/605890
 	peerConnection.onicecandidate = function (event) {
 		trace('ICE: Created');
-		data.ice = event.candidate;
-		localStorage.setItem("data-remote", JSON.stringify(data));
+		if(event.candidate) {
+			$("#ice-answerer").val(JSON.stringify(event.candidate))
+		}
 		peerConnection.onicecandidate = null;
 	};
 	trace('Peer connection: Created');
@@ -18,11 +19,11 @@
 	};
 
 	$('#get').click(function () {
-		handleConnection(peerConnection, JSON.parse(localStorage.getItem("data-local")));
+		handleConnection(peerConnection, $("#sdp-offerer").val(), $("#ice-offerer").val());
 		peerConnection.createAnswer(function (answer) {
 			trace('Session (answer): Created');
 			peerConnection.setLocalDescription(answer);
-			data.session = answer;
+			$("#sdp-answerer").val(JSON.stringify(answer))
 		}, function (code) {
     		console.error("Error: " + code);
   		});

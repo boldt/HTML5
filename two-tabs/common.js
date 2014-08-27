@@ -1,8 +1,6 @@
 var	servers = { "iceServers": [{ "url": "stun:stun.l.google.com:19302" }] };
 
 var channel;
-var data = {};
-
 var RTCPeerConnection = window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
 var SessionDescription = window.mozRTCSessionDescription || window.RTCSessionDescription;
 var IceCandidate = window.mozRTCIceCandidate || window.RTCIceCandidate;
@@ -33,13 +31,13 @@ function handleChannel(channel) {
 /*
  * Sets the SDP and the ICE
  */
-function handleConnection(peerConnection, data) {
+function handleConnection(peerConnection, sdp, ice) {
 	// Set SDP
-	var sdp = new SessionDescription(data.session);
+	sdp = new SessionDescription(JSON.parse(sdp));
 	peerConnection.setRemoteDescription(sdp);
 	// Set ICE
-	if(data.ice) {
-		var ice = new IceCandidate(data.ice);
+	if(ice) {
+		ice = new IceCandidate(JSON.parse(ice));
 		peerConnection.addIceCandidate(ice);
 	}
 };
