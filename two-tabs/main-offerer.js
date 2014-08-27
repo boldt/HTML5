@@ -27,7 +27,7 @@
 			$("#sdp-offerer").val(JSON.stringify(offer));
 		}, function (code) {
     		console.error("Error: " + code);
-  		}
+  		}, constraints
 	);
 
 	$('#get').click(function () {

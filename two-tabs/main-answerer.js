@@ -20,16 +20,18 @@
 
 	$('#get').click(function () {
 		handleConnection(peerConnection, $("#sdp-offerer").val(), $("#ice-offerer").val());
-		peerConnection.createAnswer(function (answer) {
-			trace('Session (answer): Created');
-			peerConnection.setLocalDescription(answer, function() {
-				console.log("OK: setLocalDescription")
-			}, function(e) {
-				console.log("ERROR: setLocalDescription", e)
-			});
-			$("#sdp-answerer").val(JSON.stringify(answer))
-		}, function (code) {
-    		console.error("Error: " + code);
-  		});
+		peerConnection.createAnswer(
+			function (answer) {
+				trace('Session (answer): Created');
+				peerConnection.setLocalDescription(answer, function() {
+					console.log("OK: setLocalDescription")
+				}, function(e) {
+					console.log("ERROR: setLocalDescription", e)
+				});
+				$("#sdp-answerer").val(JSON.stringify(answer))
+			}, function (code) {
+				console.error("Error: " + code);
+	  		}, constraints
+		);
 	});
 
