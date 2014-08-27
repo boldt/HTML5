@@ -37,7 +37,6 @@ function handleConnection(peerConnection, sdp, ice) {
 	// Set SDP
 	sdp = new SessionDescription(JSON.parse(sdp));
 	peerConnection.setRemoteDescription(sdp, function() {
-		console.info("OK: setRemoteDescription")
 	}, function(e) {
 		console.error("ERROR: setRemoteDescription", e)
 	});

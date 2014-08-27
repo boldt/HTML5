@@ -24,7 +24,6 @@
 			function (answer) {
 				trace('Session (answer): Created');
 				peerConnection.setLocalDescription(answer, function() {
-					console.log("OK: setLocalDescription")
 				}, function(e) {
 					console.log("ERROR: setLocalDescription", e)
 				});

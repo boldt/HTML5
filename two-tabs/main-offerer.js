@@ -20,7 +20,6 @@
 		function (offer) {
 			trace('Session (offer): Created');
 			peerConnection.setLocalDescription(offer, function() {
-				console.log("OK: setLocalDescription")
 			}, function(e) {
 				console.log("ERROR: setLocalDescription", e)
 			});
