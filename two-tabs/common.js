@@ -34,8 +34,14 @@ function handleChannel(channel) {
  * Sets the SDP and the ICE
  */
 function handleConnection(peerConnection, data) {
-	peerConnection.setRemoteDescription(new SessionDescription(data.session));
-	peerConnection.addIceCandidate(new IceCandidate(data.ice));
+	// Set SDP
+	var sdp = new SessionDescription(data.session);
+	peerConnection.setRemoteDescription(sdp);
+	// Set ICE
+	if(data.ice) {
+		var ice = new IceCandidate(data.ice);
+		peerConnection.addIceCandidate(ice);
+	}
 };
 
 $('#close').click(function () {

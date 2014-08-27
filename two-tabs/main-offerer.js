@@ -2,10 +2,12 @@
 	var peerConnection = new RTCPeerConnection(servers, {optional: [{RtpDataChannels: true}]});
 	peerConnection.onicecandidate = function (event) {
 
+		/*
 		if(!event.candidate) {
-			console.log("ERROR event.candidate:", event.candidate);
+			console.error("ERROR event.candidate:", event.candidate);
 			return;
 		}
+		*/
 
 		data.ice = event.candidate;
 		trace('ICE: Created');
@@ -23,6 +25,7 @@
 		trace('Session (offer): Created');
 		peerConnection.setLocalDescription(offer);
 		data.session = offer;
+		console.log(offer);
 		}, function (code) {
     		console.error("Error: " + code);
   		}
