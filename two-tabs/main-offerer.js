@@ -1,5 +1,5 @@
 
-	var peerConnection = new RTCPeerConnection(servers, {optional: [{RtpDataChannels: true}]});
+	var peerConnection = new RTCPeerConnection(servers, undefined);
 
 	// Fired if the ICE gathering is complete
 	// @see: http://stackoverflow.com/a/25489506/605890
@@ -18,9 +18,13 @@
 
 	peerConnection.createOffer(
 		function (offer) {
-		trace('Session (offer): Created');
-		peerConnection.setLocalDescription(offer);
-		$("#sdp-offerer").val(JSON.stringify(offer));
+			trace('Session (offer): Created');
+			peerConnection.setLocalDescription(offer, function() {
+				console.log("OK: setLocalDescription")
+			}, function(e) {
+				console.log("ERROR: setLocalDescription", e)
+			});
+			$("#sdp-offerer").val(JSON.stringify(offer));
 		}, function (code) {
     		console.error("Error: " + code);
   		}

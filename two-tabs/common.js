@@ -35,7 +35,11 @@ function handleChannel(channel) {
 function handleConnection(peerConnection, sdp, ice) {
 	// Set SDP
 	sdp = new SessionDescription(JSON.parse(sdp));
-	peerConnection.setRemoteDescription(sdp);
+	peerConnection.setRemoteDescription(sdp, function() {
+		console.info("OK: setRemoteDescription")
+	}, function(e) {
+		console.error("ERROR: setRemoteDescription", e)
+	});
 	// Set ICE
 	if(ice) {
 		ice = new IceCandidate(JSON.parse(ice));
