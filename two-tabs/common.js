@@ -6,7 +6,8 @@ var SessionDescription = window.mozRTCSessionDescription || window.RTCSessionDes
 var IceCandidate = window.mozRTCIceCandidate || window.RTCIceCandidate;
 
 function trace(text) {
-  	console.log((performance.now() / 1000).toFixed(3) + ": " + text);
+	var msg = (performance.now() / 1000).toFixed(3) + ": " + text;
+	$('#log').html(msg + "\n" + $('#log').html());
 };
 
 function handleChannel(channel) {
