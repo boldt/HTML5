@@ -1,8 +1,11 @@
 
 	var peerConnection = new RTCPeerConnection(servers, {optional: [{RtpDataChannels: true}]});
+
+	// Fired if the ICE gathering is complete
+	// @see: http://stackoverflow.com/a/25489506/605890
 	peerConnection.onicecandidate = function (event) {
-		data.ice = event.candidate;
 		trace('ICE: Created');
+		data.ice = event.candidate;
 		localStorage.setItem("data-remote", JSON.stringify(data));
 		peerConnection.onicecandidate = null;
 	};
