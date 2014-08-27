@@ -2,15 +2,15 @@
 
 ## Works
 
-* Chrome offerer <--> Chrome answerer
+* Chrome 36 offerer <--> Chrome 36 answerer
   * SDP and ICE needed
-* Firefox offerer <--> Firefox answerer
+* Firefox 31 offerer <--> Firefox 31 answerer
   * SDP needed
 
 ## Does not work yet
 
-* Chrome offerer <--> Firefox answerer
+* Chrome 36 offerer <--> Firefox 31 answerer
   * ...
-* Firefox offerer <--> Chrome answerer
+* Firefox 31 offerer <--> Chrome 36 answerer
   * ...
 
