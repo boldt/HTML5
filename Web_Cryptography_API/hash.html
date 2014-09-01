@@ -1,0 +1,27 @@
+<h1>Web Cryptography API - Native SHA-1</h1>
+<p>
+Successful tested with
+<ul>
+	<li>Chrome 37</li>
+	<li>Firefox 34a1 (Nightly)</li>
+</ul>
+See debug console.
+</p>
+<script src="commons.js"></script>
+<script>
+
+	// See: https://jswebcrypto.azurewebsites.net/demo.html#/hash
+	
+	var hallo = new Uint8Array([0x48, 0x61, 0x6C, 0x6C, 0x6F])
+	crypto.subtle.digest({ name: 'sha-1' }, hallo.buffer).then(function(sha1_ab) {
+
+		var sha1_str = sha1ArrayBufferToString(sha1_ab);
+
+		// Bash
+		// echo -n "Hallo" | sha1sum
+		// 59d9a6df06b9f610f7db8e036896ed03662d168f  -
+		var expected = "59d9a6df06b9f610f7db8e036896ed03662d168f";
+		console.log(expected, expected === sha1_str);
+	});
+
+</script>

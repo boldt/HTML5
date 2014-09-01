@@ -1,0 +1,39 @@
+<h1>Web Cryptography API - Native SHA-1</h1>
+<p>
+Successful tested with
+<ul>
+	<li>Chrome 37</li>
+	<li>Firefox 34a1 (Nightly)</li>
+</ul>
+<input type="file" id="files" name="files[]" />
+<br>
+<div id="sha1" style="padding:2px; border:1px solid #000000;font-family:'Source Code Pro',sans-serif"></div>
+</p>
+<script src="commons.js"></script>
+<script>
+
+
+	function handleFileSelect(evt) {
+		var files = evt.target.files;
+
+		console.time("FileReader")
+	    var reader = new FileReader();
+		reader.onloadend = function(evt) {
+	  		if (evt.target.readyState == FileReader.DONE) {
+				console.timeEnd("FileReader")
+				console.time("digest-sha-1")
+
+				// See: https://jswebcrypto.azurewebsites.net/demo.html#/hash
+				crypto.subtle.digest({ name: 'sha-1' }, evt.target.result).then(function(sha1_ab) {
+					console.timeEnd("digest-sha-1")
+				    document.getElementById('sha1').innerHTML = sha1ArrayBufferToString(sha1_ab);
+				});
+			}
+		}
+	    reader.readAsArrayBuffer(files[0]);
+
+	}
+	document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+</script>
+

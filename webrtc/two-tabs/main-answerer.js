@@ -3,6 +3,8 @@
 
 	// Fired if the ICE gathering is complete
 	// @see: http://stackoverflow.com/a/25489506/605890
+	// Firefox includes the Candidate in the Offer SDP.
+	// https://hacks.mozilla.org/2013/07/webrtc-and-the-early-api/
 	peerConnection.onicecandidate = function (event) {
 		trace('ICE: Created');
 		if(event.candidate) {
