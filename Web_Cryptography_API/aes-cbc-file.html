@@ -1,0 +1,41 @@
+<h1>Web Cryptography API - Native SHA-1</h1>
+<p>
+Successful tested with
+<ul>
+	<li>Chrome 37</li>
+	<li>Firefox 34a1 (Nightly)</li>
+</ul>
+<input type="file" id="files" name="files[]" />
+</p>
+
+<script src="commons.js"></script>
+<script src="aes-cbc.js"></script>
+
+<script>
+
+	/*
+     * Cipher-block chaining (CBC)
+     * 
+	 * http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Cipher-block_chaining_.28CBC.29
+     * 
+     * To make each message unique, an initialization vector must be used in the first block.
+     * 
+	 */
+	
+	function handleFileSelect(evt) {
+		var files = evt.target.files;
+
+		console.time("FileReader")
+	    var reader = new FileReader();
+		reader.onloadend = function(evt) {
+	  		if (evt.target.readyState == FileReader.DONE) {
+				console.timeEnd("FileReader")
+				aes_cbc(new Uint8Array(evt.target.result));
+			}
+		}
+	    reader.readAsArrayBuffer(files[0]);
+
+	}
+	document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+</script>
