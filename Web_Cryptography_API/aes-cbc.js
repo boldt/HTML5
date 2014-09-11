@@ -14,7 +14,7 @@ var aes_cbc = function (buf) {
 	var keyUsages = ['encrypt', 'decrypt'];
 	var keyLengthBits = 128;
 
-	var genAlgorithm = { name: algorithmName, length: keyLengthBits };
+	var aesKeyGenParams = { name: algorithmName, length: keyLengthBits };
 	var results = {};
 
 	var ivBuf = crypto.getRandomValues(new Uint8Array(16))
@@ -22,8 +22,8 @@ var aes_cbc = function (buf) {
 
 	console.log("Raw data", buf)
 
-	// Generate radom key
-	crypto.subtle.generateKey(genAlgorithm, extractable, keyUsages).then(function(key_gen) {
+	// Generate random key
+	crypto.subtle.generateKey(aesKeyGenParams, extractable, keyUsages).then(function(key_gen) {
 		console.log("Generated key", key_gen);
 
 		// AES enc
