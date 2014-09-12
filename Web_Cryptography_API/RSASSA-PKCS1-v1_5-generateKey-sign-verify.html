@@ -1,3 +1,13 @@
+<h1>Web Cryptography API - RSASSA - PKCS1-v1_5 sign/verify</h1>
+<p>
+Successful tested with
+<ul>
+	<li>Chrome 37</li>
+	<li>Firefox 34a1 (Nightly)</li>
+</ul>
+See debug console.
+</p>
+
 <script>
 
 	var algorithmName = "RSASSA-PKCS1-v1_5"
@@ -6,20 +16,22 @@
 	var hashAlgo = "SHA-256";
 	var extractable = true; // can extract it later if we want
 	var keyUsages = ['sign', 'verify'];
-	var buf = new ArrayBuffer([1,2,3]);
+	var buf = new Uint8Array([1,2,3]);
 
 	var rsaHashedKeyGenParams = {
         name: algorithmName,
         modulusLength: modLength,
         publicExponent: exponent,  
-        hash: {name: hashAlgo}
+        hash: {
+			name: hashAlgo
+		}
     };
 
 	var algorithmSign = {
 		name: algorithmName
 	};
 
-	console.log("Raw data", buf)
+	console.log("Raw data", buf);
 
 	// Generate random public + private key
     window.crypto.subtle.generateKey(rsaHashedKeyGenParams, extractable, keyUsages). then(function (keyPair) {
@@ -28,6 +40,20 @@
 		// Sign the data
 		window.crypto.subtle.sign(algorithmSign, keyPair.privateKey, buf).then(function(signature) {
 			console.log("Signature:", signature, "Length:", signature.byteLength);
+
+			// Verify the signature
+			window.crypto.subtle.verify(
+				{name: algorithmName },
+				keyPair.publicKey,
+				signature,
+				buf
+			).then(function(success) {
+				if (success) {
+				    console.log("Verify: true")
+				} else {
+				    console.log("Verify: false")
+				}
+			});
 		});
     });
 
