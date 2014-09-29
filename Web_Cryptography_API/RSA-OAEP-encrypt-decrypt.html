@@ -4,11 +4,7 @@
 <p>
 Successful tested with
 <ul>
-	<li>n/a</li>
-<!--
 	<li>Chrome 37</li>
-	<li>Firefox 34a1 (Nightly)</li>
--->
 </ul>
 See debug console.
 </p>
@@ -25,7 +21,7 @@ See debug console.
 
 	var rsaOaepParams =  {
 		name: algorithmName,
-		modulusLength: exponent,
+		modulusLength: modLength,
 		publicExponent: exponent,
 		hash: {
 			name: hashAlgo
@@ -36,17 +32,17 @@ See debug console.
 
 	crypto.subtle.generateKey(rsaOaepParams, extractable, keyUsages).then(function(keys) {
 		console.log("Keys:", keys);
-		var pub_key = new Uint8Array(key.publicKey);
 
-		crypto.subtle.encrypt(rsaOaepParams, key.publicKey, buf).then(function(encryptedData) {
+		crypto.subtle.encrypt(rsaOaepParams, keys.publicKey, buf).then(function(encryptedData) {
 			var enc_data = new Uint8Array(encryptedData);
 			console.log("encrypted data: ", enc_data);
 		
-			crypto.subtle.decrypt(rsaOaepParams, key.privateKey, encryptedData).then(function(decryptedData) {
+			crypto.subtle.decrypt(rsaOaepParams, keys.privateKey, encryptedData).then(function(decryptedData) {
 				var dec_data = new Uint8Array(decryptedData);
 				console.log("decrypted data: ", dec_data);
 			})
 		})
+
 	});
 
 </script>
