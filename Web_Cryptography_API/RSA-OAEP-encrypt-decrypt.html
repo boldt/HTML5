@@ -1,0 +1,50 @@
+<meta charset="UTF-8">
+
+<h1>Web Cryptography API - RSA OAEP encrypt/decrypt</h1>
+<p>
+Successful tested with
+<ul>
+	<li>Chrome 37</li>
+	<li>Firefox 34a1 (Nightly)</li>
+</ul>
+See debug console.
+</p>
+
+<script>
+
+	var algorithmName = "RSA-OAEP";
+	var modLength = 2048;
+	var exponent = new Uint8Array([1, 0, 1]); // 24 bit representation of 65537
+	var hashAlgo = "SHA-256";
+	var extractable = true; // can extract it later if we want
+	var keyUsages = ["encrypt", "decrypt"];
+	var buf = new Uint8Array([1,2,3]);
+
+	var rsaOaepParams =  {
+		name: algorithmName,
+		modulusLength: exponent,
+		publicExponent: exponent,
+		hash: {
+			name: hashAlgo
+		}
+	};
+
+	console.log("Raw data: ", buf);
+
+	crypto.subtle.generateKey(rsaOaepParams, extractable, keyUsages).then(function(keys) {
+		console.log("Keys:", keys);
+		var pub_key = new Uint8Array(key.publicKey);
+
+		crypto.subtle.encrypt(rsaOaepParams, key.publicKey, buf).then(function(encryptedData) {
+			var enc_data = new Uint8Array(encryptedData);
+			console.log("encrypted data: ", enc_data);
+		
+			crypto.subtle.decrypt(rsaOaepParams, key.privateKey, encryptedData).then(function(decryptedData) {
+				var dec_data = new Uint8Array(decryptedData);
+				console.log("decrypted data: ", dec_data);
+			})
+		})
+	});
+
+</script>
+
