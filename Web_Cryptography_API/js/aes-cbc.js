@@ -18,7 +18,7 @@ var aes_cbc = function (buf) {
 	var results = {};
 
 	var ivBuf = crypto.getRandomValues(new Uint8Array(16))
-	var aesCbc = { name: "AES-CBC", iv: ivBuf };
+	var aesCbcParams  = { name: "AES-CBC", iv: ivBuf };
 
 	console.log("Raw data", buf)
 
@@ -27,7 +27,7 @@ var aes_cbc = function (buf) {
 		console.log("Generated key", key_gen);
 
 		// AES enc
-		crypto.subtle.encrypt(aesCbc, key_gen, buf).then(function(data_enc) {
+		crypto.subtle.encrypt(aesCbcParams , key_gen, buf).then(function(data_enc) {
 			console.log("Encrypted data: ", new Uint8Array(data_enc));
 
 			// Key --> AB
@@ -39,7 +39,7 @@ var aes_cbc = function (buf) {
 					console.log("Imported key", key_imp);
 
 					// AES dec
-					crypto.subtle.decrypt(aesCbc, key_imp, data_enc).then(function(data_dec) {
+					crypto.subtle.decrypt(aesCbcParams , key_imp, data_enc).then(function(data_dec) {
 						console.log("DONE");
 						console.log("Decrypted data: ", new Uint8Array(data_dec));		
 					});
