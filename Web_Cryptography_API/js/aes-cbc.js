@@ -35,12 +35,11 @@ var aes_cbc = function (buf) {
 				console.log("Exported key", new Uint8Array(key_ab));
 
 				// AB --> Key
-				crypto.subtle.importKey("raw", key_ab, { name: "AES-CBC" }, true, keyUsages).then(function(key_imp) {
+				crypto.subtle.importKey("raw", key_ab, { name: algorithmName }, true, keyUsages).then(function(key_imp) {
 					console.log("Imported key", key_imp);
 
 					// AES dec
 					crypto.subtle.decrypt(aesCbcParams , key_imp, data_enc).then(function(data_dec) {
-						console.log("DONE");
 						console.log("Decrypted data: ", new Uint8Array(data_dec));		
 					});
 				});

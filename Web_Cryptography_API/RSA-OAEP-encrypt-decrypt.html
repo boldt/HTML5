@@ -29,20 +29,39 @@ See debug console.
 		}
 	};
 
+    var rsaHashedImportParams = {
+      	hash: {
+			name: hashAlgo
+		}  
+    }
+
 	console.log("Raw data: ", buf);
 
 	crypto.subtle.generateKey(rsaOaepParams, extractable, keyUsages).then(function(keys) {
 		console.log("Keys:", keys);
 
-		crypto.subtle.encrypt(rsaOaepParams, keys.publicKey, buf).then(function(encryptedData) {
-			var enc_data = new Uint8Array(encryptedData);
-			console.log("encrypted data: ", enc_data);
-		
-			crypto.subtle.decrypt(rsaOaepParams, keys.privateKey, encryptedData).then(function(decryptedData) {
-				var dec_data = new Uint8Array(decryptedData);
-				console.log("decrypted data: ", dec_data);
-			})
-		})
+		crypto.subtle.exportKey('spki', keys.publicKey).then(function(key_ab) {
+			console.log("Exported key", new Uint8Array(key_ab));
+
+		    crypto.subtle.importKey("spki", key_ab, { name: algorithmName, hash: { name: hashAlgo } }, true, ["encrypt"]).then(function(key_imp) {
+			    console.log("Imported key", key_imp);
+
+		        crypto.subtle.encrypt(rsaOaepParams, key_imp, buf).then(function(encryptedData) {
+			        console.log("encrypted data: ", new Uint8Array(encryptedData));
+
+			        crypto.subtle.decrypt(rsaOaepParams, keys.privateKey, encryptedData).then(function(decryptedData) {
+				        var dec_data = new Uint8Array(decryptedData);
+				        console.log("decrypted data: ", dec_data);
+			        });
+		        });
+            });
+        });
+
+/*		
+
+
+
+*/
 
 	});
 
