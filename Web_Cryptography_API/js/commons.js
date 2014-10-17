@@ -1,3 +1,8 @@
+// http://stackoverflow.com/a/4723302/605890
+if (window.location.protocol != "https:") {
+	window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
+}
+
 var sha1ArrayBufferToString = function(buffer) {
 
 	// From sha1.js
