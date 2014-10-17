@@ -1,0 +1,70 @@
+<!doctype html>
+<meta charset="UTF-8">
+
+<h1>Web Cryptography API - RSA OAEP encrypt/decrypt</h1>
+<p>
+Successful tested with
+<ul>
+	<li>Chrome 37</li>
+	<li>Firefox 35.0a1 (2014-09-28) Nightly</li>
+</ul>
+See debug console.
+</p>
+
+<script src="../js/commons.js"></script>
+<script>
+
+    var rsa = {};
+	rsa.algorithmName = "RSA-OAEP";
+	rsa.modLength = 2048;
+	rsa.exponent = new Uint8Array([1, 0, 1]); // 24 bit representation of 65537
+	rsa.hashAlgo = "SHA-256";
+	rsa.extractable = true; // can extract it later if we want
+	rsa.keyUsages = ["encrypt", "decrypt"];
+	rsa.rsaOaepParams =  {
+		name: rsa.algorithmName,
+		modulusLength: rsa.modLength,
+		publicExponent: rsa.exponent,
+		hash: {
+			name: rsa.hashAlgo
+		}
+	};
+    rsa.rsaHashedImportParams = {
+        name: rsa.algorithmName,
+        hash: {
+            name: rsa.hashAlgo
+        }
+    };
+
+	var buf = new Uint8Array([1,2,3]);
+	console.log("Raw data: ", buf);
+
+	// Generate random key
+	crypto.subtle.generateKey(rsa.rsaOaepParams, rsa.extractable, rsa.keyUsages).then(function(keys) {
+		console.log("Keys:", keys);
+
+		// Key --> AB
+		crypto.subtle.exportKey('spki', keys.publicKey).then(function(key_ab) {
+			console.log("Exported key", new Uint8Array(key_ab));
+
+			// AB --> Key
+		    crypto.subtle.importKey("spki", key_ab, rsa.rsaHashedImportParams, true, ["encrypt"]).then(function(key_imp) {
+			    console.log("Imported key", key_imp);
+
+        		// RSA enc
+		        crypto.subtle.encrypt(rsa.rsaOaepParams, key_imp, buf).then(function(encryptedData) {
+			        console.log("encrypted data: ", new Uint8Array(encryptedData));
+
+					// RSA dec
+			        crypto.subtle.decrypt(rsa.rsaOaepParams, keys.privateKey, encryptedData).then(function(decryptedData) {
+				        var dec_data = new Uint8Array(decryptedData);
+				        console.log("decrypted data: ", dec_data);
+			        });
+		        });
+            });
+        });
+
+	});
+
+</script>
+
