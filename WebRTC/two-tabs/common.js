@@ -3,11 +3,11 @@ var	servers = { "iceServers":
 	[
 		{
 			url: 'stun:' + base + ':3478'
-		}, {
+		}/*, {
 			url: 'turn:' + base + ':3478',
 			credential: '',
 			username: ''
-		}
+		}*/
 	]
 };
 
