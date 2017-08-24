@@ -115,7 +115,7 @@ function save_rb() {
 
 function load_rb() {
 	for (i = 0; i < checkboxes.length; i++) {
-		checkboxes[i].checked = localStorage.getItem(checkboxes[i].id) === 'true' ? true : false;
+		checkboxes[i].checked = localStorage.getItem(checkboxes[i].id) === 'false' ? false : true;
 	}
 }
 load_rb();
