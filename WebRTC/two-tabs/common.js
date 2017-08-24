@@ -1,50 +1,15 @@
-
-var	servers = { "iceServers": [
-	// Sources:
-	//
-	// http://stackoverflow.com/a/20134888/605890
-	// https://gist.github.com/yetithefoot/7592580
-	{url:'stun:stun.l.google.com:19302'},
-
-/*
-	{url:'stun:stun01.sipphone.com'},
-	{url:'stun:stun.ekiga.net'},
-	{url:'stun:stun.fwdnet.net'},
-	{url:'stun:stun.ideasip.com'},
-	{url:'stun:stun.iptel.org'},
-	{url:'stun:stun.rixtelecom.se'},
-	{url:'stun:stun.schlund.de'},
-	{url:'stun:stun1.l.google.com:19302'},
-	{url:'stun:stun2.l.google.com:19302'},
-	{url:'stun:stun3.l.google.com:19302'},
-	{url:'stun:stun4.l.google.com:19302'},
-
-	{url:'stun:stunserver.org'},
-	{url:'stun:stun.softjoys.com'},
-	{url:'stun:stun.voiparound.com'},
-	{url:'stun:stun.voipbuster.com'},
-	{url:'stun:stun.voipstunt.com'},
-	{url:'stun:stun.voxgratia.org'},
-	{url:'stun:stun.xten.com'},
-*/
-	{
-		url: 'turn:numb.viagenie.ca',
-		credential: 'muazkh',
-		username: 'webrtc@live.com'
-	}
-/*
-	{
-		url: 'turn:192.158.29.39:3478?transport=udp',
-		credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-		username: '28224511:1379330808'
-	},
-	{
-		url: 'turn:192.158.29.39:3478?transport=tcp',
-		credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-		username: '28224511:1379330808'
-	}
-*/
-] };
+var base = 'coturn.dennis-boldt.de';
+var	servers = { "iceServers": 
+	[
+		{
+			url: 'stun:' + base + ':3478'
+		}, {
+			url: 'turn:' + base + ':3478',
+			credential: '',
+			username: ''
+		}
+	]
+};
 
 //var constraints = { 'mandatory': { 'OfferToReceiveAudio': false, 'OfferToReceiveVideo': false } };
 var constraints;
@@ -138,3 +103,20 @@ function formatPriority(priority) {
   s += priority & 0xFF;
   return s;
 }
+
+
+// Based on https://stackoverflow.com/a/23212379
+var i, checkboxes = document.querySelectorAll('input[type=checkbox]');
+function save_rb() {
+	for (i = 0; i < checkboxes.length; i++) {
+		localStorage.setItem(checkboxes[i].id, checkboxes[i].checked);
+	}
+}
+
+function load_rb() {
+	for (i = 0; i < checkboxes.length; i++) {
+		checkboxes[i].checked = localStorage.getItem(checkboxes[i].id) === 'true' ? true : false;
+	}
+}
+load_rb();
+
