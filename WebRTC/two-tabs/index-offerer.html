@@ -10,19 +10,19 @@
 	<h2>Offerer (this tab)</h2>
 	<p>1. Generated automatically</p>
 	<p>
-	SDP<br><textarea id="sdp-offerer"></textarea><br>
-	ICE Candidates: 
-	<input type="checkbox" id="offer_host"><label for="offer_host">host</label>
-	<input type="checkbox" id="offer_srflx"><label for="offer_srflx">srflx</label>
-	<input type="checkbox" id="offer_relay"><label for="offer_relay">relay</label>
-	<br><textarea id="ice-offerer"></textarea>
+	SDP<br><textarea id="sdp-local"></textarea><br>
+	ICE Candidates:
+	<input type="checkbox" id="host"><label for="host">host</label>
+	<input type="checkbox" id="srflx"><label for="srflx">srflx</label>
+	<input type="checkbox" id="relay"><label for="relay">relay</label>
+	<br><textarea id="ice-local"></textarea>
 	<br><button id="offer">Generate offer</button>
 	</p>
 	<h2>Answerer (other tab)</h2>
 	<p>4. Copy from answerer tab</p>
 	<p>
-	SDP<br><textarea id="sdp-answerer"></textarea><br>
-	ICE Candidates<br><textarea id="ice-answerer"></textarea>
+	SDP<br><textarea id="sdp-remote"></textarea><br>
+	ICE Candidates<br><textarea id="ice-remote"></textarea>
 	<br><button id="connect">Connect!</button>
 	<!--
 	<br><button id="close">Close</button>

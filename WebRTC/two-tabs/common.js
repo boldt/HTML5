@@ -1,13 +1,13 @@
 var base = 'coturn.dennis-boldt.de';
-var	servers = { "iceServers": 
+var	servers = { "iceServers":
 	[
 		{
 			url: 'stun:' + base + ':3478'
-		}/*, {
+		}, {
 			url: 'turn:' + base + ':3478',
 			credential: '',
 			username: ''
-		}*/
+		}
 	]
 };
 
@@ -15,9 +15,70 @@ var	servers = { "iceServers":
 var constraints;
 
 var channel;
-var RTCPeerConnection = window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
-var SessionDescription = window.mozRTCSessionDescription || window.RTCSessionDescription;
-var IceCandidate = window.mozRTCIceCandidate || window.RTCIceCandidate;
+var PeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+var SessionDescription = window.RTCSessionDescription || window.mozRTCSessionDescription || window.RTCSessionDescription;
+var IceCandidate = window.RTCIceCandidate || window.mozRTCIceCandidate || window.RTCIceCandidate;
+// ##########################################################
+
+var pc = new PeerConnection(servers, undefined);
+trace('Peer connection created');
+
+// Fired if the ICE gathering is complete
+// @see: http://stackoverflow.com/a/25489506/605890
+// INVALID?
+// Firefox includes the Candidate in the Offer SDP.
+// https://hacks.mozilla.org/2013/07/webrtc-and-the-early-api/
+var candidates = [];
+pc.onicecandidate = function (event) {
+  if(event.candidate) {
+    var c = parseCandidate(event.candidate.candidate);
+    trace('ICE: ' + c.type + ' Candidate');
+    if(c.type === 'host' && $('#host').prop('checked')) {
+      candidates.push(event.candidate);
+    } else if(c.type === 'srflx' && $('#srflx').prop('checked')) {
+      candidates.push(event.candidate);
+    } else if(c.type === 'relay' && $('#relay').prop('checked')) {
+      candidates.push(event.candidate);
+    }
+    //console.log(candidates);
+    $("#ice-local").text(JSON.stringify(candidates));
+  } else {
+    trace('Gather ICE Candidates done');
+  }
+};
+
+var offer = function() {
+	pc.createOffer(
+			function (offer) {
+				trace('Offer created');
+				pc.setLocalDescription(offer, function() {
+				}, function(e) {
+					console.log("ERROR: setLocalDescription", e)
+				});
+				$("#sdp-local").append(JSON.stringify(offer));
+			}, function (code) {
+				console.error("Error: " + code);
+	  		}, constraints
+		);
+};
+
+var answer = function() {
+  pc.createAnswer(
+    function (answer) {
+      trace('Answer created');
+      pc.setLocalDescription(answer, function() {
+      }, function(e) {
+        console.log("ERROR: setLocalDescription", e)
+      });
+      $("#sdp-local").append(JSON.stringify(answer));
+      handleIceCandidates($("#ice-local").val());
+    }, function (code) {
+      console.error("Error: " + code);
+      }, constraints
+  );
+};
+
+// ##########################################################
 
 function trace(text) {
 	var msg = (performance.now() / 1000).toFixed(3) + ": " + text;
@@ -46,10 +107,10 @@ function handleChannel(channel) {
 /*
  * Sets the SDP and the ICE
  */
-function handleRemoteDescription(peerConnection, sdp, cb) {
+function handleRemoteDescription(pc, sdp, cb) {
 	// Set SDP
 	sdp = new SessionDescription(JSON.parse(sdp));
-	peerConnection.setRemoteDescription(sdp, cb, function(e) {
+	pc.setRemoteDescription(sdp, cb, function(e) {
 		console.error("ERROR: setRemoteDescription", e)
 	});
 };
@@ -60,7 +121,7 @@ function handleIceCandidates(iceCandidates) {
 		iceCandidates = JSON.parse(iceCandidates);
 		for(var i = 0; i < iceCandidates.length; i++) {
 			var ice = new IceCandidate(iceCandidates[i]);
-			peerConnection.addIceCandidate(ice);
+			pc.addIceCandidate(ice);
 		}
 	}
 }
@@ -68,7 +129,7 @@ function handleIceCandidates(iceCandidates) {
 $('#close').click(function () {
 	channel.close();
 	trace('Channel: Closed');
-	peerConnection.close();
+	pc.close();
 	trace('Peer connection: Closed');
 });
 
