@@ -2,11 +2,12 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>WebRTC DataChannel</title>
+	<title>WebRTC Example</title>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-	<h1>WebRTC DataChannel</h1>
+	<h1>WebRTC Example</h1>
+
 	<h2>Offerer (other tab)</h2>
 	<p>2. Copy from offerer tab</p>
 	<p>
@@ -14,8 +15,9 @@
 	ICE Candidates
 	<br><textarea id="ice-remote"></textarea>
 	</p>
+
 	<h2>Answerer (this tab)</h2>
-	<p>3. Generated from offer</p>
+	<p>3. Generate answer from offer</p>
 	<p>
 	SDP<br><textarea id="sdp-local"></textarea><br>
 	ICE Candidates:
@@ -23,11 +25,26 @@
 	<input type="checkbox" id="srflx"><label for="srflx">srflx</label>
 	<input type="checkbox" id="relay"><label for="relay">relay</label>
 	<br><textarea id="ice-local"></textarea>
-	<br><button id="answer">Generate answer</button>
+	<br><button id="audio">Add Audio</button>
+	<button id="video">Add Video</button>
+  <button id="channel">Add Data Channel</button>
+	<br><br><button id="answer">Generate answer</button>
+  <br><button id="signal">Signal</button>
 	<!--
 	<br><button id="close">Close</button>
 	-->
 	</p>
+
+  <h2>Streams</h2>
+
+  <h3>Local</h3>
+  <video controls autoplay id="videoPlayer-local" style="border: 2px solid black;"></video><br>
+  <audio controls autoplay id="audioPlayer-local"></audio>
+
+  <h3>Remote</h3>
+  <video controls autoplay id="videoPlayer-remote" style="border: 2px solid black;"></video><br>
+  <audio controls autoplay id="audioPlayer-remote"></audio>
+
 	<h2>Log</h2>
 	<p>
 		<textarea id="log"></textarea>
